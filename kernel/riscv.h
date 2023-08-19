@@ -76,6 +76,7 @@ w_sip(uint64 x) {
 #define SIE_STIE (1L << 5)  // timer interrupt enable
 #define SIE_SSIE (1L << 1)  // software interrupt enable, one core to another
 
+// supervisor interrupt enable
 static inline uint64
 r_sie() {
     uint64 x;
@@ -83,6 +84,7 @@ r_sie() {
     return x;
 }
 
+// supervisor interrupt enable
 static inline void
 w_sie(uint64 x) {
     asm volatile("csrw sie, %0" : : "r" (x));
@@ -133,6 +135,9 @@ r_medeleg() {
     return x;
 }
 
+// Machine Exception Delegation
+// medeleg register specifies whether particular machine level exceptions
+// can be delegated to lower privilege levels
 static inline void
 w_medeleg(uint64 x) {
     asm volatile("csrw medeleg, %0" : : "r" (x));
@@ -152,6 +157,12 @@ r_mideleg() {
     return x;
 }
 
+// Machine Interrupt Delegation
+// mideleg register specifies whether particular machine level interrupts
+// can be delegated to lower privilege levels for handling
+// each bit in the register might correspond to a particular type
+// of interrupt and whether or not this bit is set might indicate
+// whether it can be delegated to lower privilege levels
 static inline void
 w_mideleg(uint64 x) {
     asm volatile("csrw mideleg, %0" : : "r" (x));
@@ -215,7 +226,7 @@ w_pmpaddr0(uint64 x) {
 
 #define MAKE_SATP(pagetable) (SATP_SV39 | (((uint64)pagetable) >> 12))
 
-// supervisor address translation and protection;
+// satp - supervisor address translation and protection;
 // holds the address of the page table
 static inline uint64
 r_satp() {
@@ -223,6 +234,8 @@ r_satp() {
     asm volatile("csrr %0, satp" : : "=r" (x));
 }
 
+// satp - supervisor address translation and protection;
+// holds the address of the page table
 static inline void
 w_satp(uint64 x) {
     asm volatile("csrw satp, %0" : : "r" (x));
