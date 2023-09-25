@@ -83,7 +83,7 @@ void start() {
     // ask for clock interruots
     timerinit();
 
-    // keep each CPU's hartid in its tp register, for cpuid()
+    // keep each CPU's hartid in its thread pointer register, for cpuid()
     uint64 id = r_mhartid();
     w_tp(id);
 
@@ -104,7 +104,7 @@ void timerinit() {
 
 
     // ask the CLINT for a timer interrupt.
-    // CLINT is the Core Local INTerpreter, which contains the timer
+    // CLINT is the Core Local INTerrrupter, which contains the timer
     // interrupt
 
     int interval = 1000000;  // number of cycles;
